@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ONLY FOR MY GIRL💛</title>
+  <meta name="description" content="A little birthday celebration, made only for my girl.">
+  <style>
+    html,body{margin:0;width:100%;height:100%;background:#FADED2;overflow:hidden}
+    #app{width:100%;height:100%;border:0;display:block}
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+  var source='./index%20(1).html';
+  fetch(source,{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw new Error('Birthday page failed to load');return r.text()})
+    .then(function(html){
+      /* Requested identity change — keep the existing design/content, only change the displayed name. */
+      html=html.replace(/Bhavanika/g,'ONLY FOR MY GIRL💛');
+
+      /* Remove the old opening scroll cue; the existing Continue button is moved instead. */
+      html=html.replace(/\s*<div class="scroll-cue rv d8">[\s\S]*?<\/div>/,'');
+
+      /* Keep only the Go Back control in Kaadhal Kaditham. The original script expects this id,
+         so leave a non-visible compatibility control rather than creating another visible button. */
+      html=html.replace(/<button class="btn" id="backBtn2">Back to the celebration 🎉<\/button>/,'<button id="backBtn2" type="button" aria-hidden="true" tabindex="-1" style="display:none!important">Back</button>');
+
+      /* Move the already-existing celebration/Continue button into the opening section. */
+      var injected = `
+<style>
+  #heroContinueWrap{
+    display:flex!important;
+    justify-content:center;
+    margin-top:clamp(28px,3.2vw,40px);
+  }
+  #heroContinueWrap #btnCelebrate{
+    min-height:58px;
+    padding:19px 46px;
+    transform:scale(1.035);
+  }
+  #heroContinueWrap #btnCelebrate:hover{transform:translate3d(0,-2px,0) scale(1.07)}
+  @media(max-width:719px){
+    #heroContinueWrap #btnCelebrate{min-height:56px;padding:18px 38px}
+  }
+</style>
+<script>
+(function(){
+  function moveExistingContinue(){
+    var btn=document.getElementById('btnCelebrate');
+    var hero=document.getElementById('heroInner');
+    if(!btn||!hero||document.getElementById('heroContinueWrap'))return;
+    var oldWrap=btn.parentElement;
+    var wrap=document.createElement('div');
+    wrap.id='heroContinueWrap';
+    wrap.className='hero-continue';
+    wrap.appendChild(btn);
+    hero.appendChild(wrap);
+    if(oldWrap && oldWrap!==wrap){
+      var parent=oldWrap.parentElement;
+      if(parent && !oldWrap.children.length) oldWrap.remove();
+      else if(oldWrap && oldWrap.parentElement) oldWrap.remove();
+    }
+    btn.textContent='Continue →';
+    btn.setAttribute('aria-label','Continue');
+    btn.classList.add('hero-continue-btn');
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',moveExistingContinue);
+  else moveExistingContinue();
+  window.addEventListener('load',moveExistingContinue);
+})();
+<\/script>`;
+
+      html=html.replace(/<\/body>/,injected+'\n</body>');
+      document.open();
+      document.write(html);
+      document.close();
+    })
+    .catch(function(err){
+      document.getElementById('app').innerHTML='<div style="font:16px system-ui;padding:32px;color:#4A2732">Unable to open the birthday page. Please refresh.</div>';
+      console.error(err);
+    });
+})();
+</script>
+</body>
+</html>
